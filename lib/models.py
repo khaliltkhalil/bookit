@@ -1,5 +1,5 @@
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Time, Date, Integer, String
+from sqlalchemy import Column, Time, DateTime, Integer, String, Boolean, ForeignKey
 
 
 Base = declarative_base()
@@ -27,3 +27,20 @@ class Client(Base):
 
     def __repr__(self):
         return f"Client {self.first_name} {self.last_name}"
+
+
+class Appointment(Base):
+    __tablename__ = "appointments"
+
+    id = Column(Integer, primary_key=True)
+    barber_id = Column(Integer, ForeignKey("barbers.id"))
+    client_id = Column(Integer, ForeignKey("clients.id"))
+    date = Column(DateTime, nullable=False)
+    time = Column(Time, nullable=False)
+    booked = Column(Boolean, default=False)
+
+    def __repr__(self):
+        return (
+            f"Appointment {self.barber_id} with {self.client_id}"
+            + f"on {self.date} at {self.time}"
+        )
