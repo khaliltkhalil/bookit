@@ -13,6 +13,8 @@ class Barber(Base):
     last_name = Column(String)
     email = Column(String)
 
+    appointments = Relationship("Appointment", back_populates="barber")
+
     def __repr__(self):
         return f"Barber {self.first_name} {self.last_name}"
 
@@ -24,6 +26,8 @@ class Client(Base):
     first_name = Column(String)
     last_name = Column(String)
     email = Column(String)
+
+    appointments = Relationship("Appointment", back_populates="client")
 
     def __repr__(self):
         return f"Client {self.first_name} {self.last_name}"
