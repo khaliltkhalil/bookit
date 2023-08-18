@@ -1,4 +1,4 @@
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, Relationship
 from sqlalchemy import Column, Time, DateTime, Integer, String, Boolean, ForeignKey
 
 
@@ -38,6 +38,9 @@ class Appointment(Base):
     date = Column(DateTime, nullable=False)
     time = Column(Time, nullable=False)
     booked = Column(Boolean, default=False)
+
+    barber = Relationship("Barber", back_populates="appointments")
+    client = Relationship("Client", back_populates="appointments")
 
     def __repr__(self):
         return (
