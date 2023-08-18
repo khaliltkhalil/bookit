@@ -30,8 +30,21 @@ def populate_barbers():
     return barbers
 
 
+def populate_clients():
+    clients = []
+    for _ in range(50):
+        first_name = fake.first_name_male()
+        last_name = fake.last_name()
+        email = first_name + last_name + "@" + "gmail.com"
+        client = Client(first_name=first_name, last_name=last_name, email=email)
+        clients.append(client)
+    session.add_all(clients)
+    session.commit()
+    return clients
+
+
 if __name__ == "__main__":
     with Session(engine) as session:
         clear_db()
-        populate_barbers()
-        # barbers = populate_barbers()
+        barbers = populate_barbers()
+        clients = populate_clients()
