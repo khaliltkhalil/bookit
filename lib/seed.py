@@ -4,6 +4,8 @@ from sqlalchemy import create_engine, select, delete
 from sqlalchemy.orm import Session
 from faker import Faker
 from models import Barber, Client, Appointment
+import datetime
+import random
 
 
 engine = create_engine("sqlite:///bookit.db")
@@ -22,7 +24,7 @@ def populate_barbers():
     for _ in range(5):
         first_name = fake.first_name()
         last_name = fake.last_name()
-        email = first_name + last_name + "@" + "gmail.com"
+        email = first_name.lower() + last_name.lower() + "@" + "gmail.com"
         barber = Barber(first_name=first_name, last_name=last_name, email=email)
         barbers.append(barber)
     session.add_all(barbers)
@@ -35,7 +37,7 @@ def populate_clients():
     for _ in range(50):
         first_name = fake.first_name_male()
         last_name = fake.last_name()
-        email = first_name + last_name + "@" + "gmail.com"
+        email = first_name.lower() + last_name.lower() + "@" + "gmail.com"
         client = Client(first_name=first_name, last_name=last_name, email=email)
         clients.append(client)
     session.add_all(clients)
@@ -43,8 +45,25 @@ def populate_clients():
     return clients
 
 
+def populate_appointments(barbers):
+    year = 2032
+    month = 8
+    appointments = []
+    for day in range(21, 27):
+        for time in range(8, 19):
+            date = datetime.date(year, month, day)
+            time = datetime.time(time)
+            appointment = Appointment(date=date, time=time)
+            appointment.barber = random.choice(barbers)
+            appointments.append(appointment)
+    session.add_all(appointments)
+    session.commit()
+    return appointments
+
+
 if __name__ == "__main__":
     with Session(engine) as session:
         clear_db()
         barbers = populate_barbers()
         clients = populate_clients()
+        appointments = populate_appointments(barbers)
