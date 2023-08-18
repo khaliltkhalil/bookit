@@ -1,5 +1,5 @@
 from sqlalchemy.orm import declarative_base, Relationship
-from sqlalchemy import Column, Time, DateTime, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Time, Date, Integer, String, Boolean, ForeignKey
 
 
 Base = declarative_base()
@@ -39,7 +39,7 @@ class Appointment(Base):
     id = Column(Integer, primary_key=True)
     barber_id = Column(Integer, ForeignKey("barbers.id"))
     client_id = Column(Integer, ForeignKey("clients.id"))
-    date = Column(DateTime, nullable=False)
+    date = Column(Date, nullable=False)
     time = Column(Time, nullable=False)
     booked = Column(Boolean, default=False)
 
