@@ -46,7 +46,7 @@ def populate_clients():
 
 
 def populate_appointments(barbers):
-    year = 2032
+    year = 2023
     month = 8
     appointments = []
     for day in range(21, 27):

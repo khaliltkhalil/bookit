@@ -18,6 +18,13 @@ class Barber(Base):
     def __repr__(self):
         return f"Barber {self.first_name} {self.last_name}"
 
+    # create an appointment,  day and time are python object
+    def add_appointment(self, date, time, session):
+        appointment = Appointment(date=date, time=time)
+        appointment.barber = self
+        session.add(appointment)
+        session.commit()
+
 
 class Client(Base):
     __tablename__ = "clients"
