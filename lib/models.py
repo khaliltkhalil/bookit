@@ -25,17 +25,76 @@ class Barber(Base):
         session.add(appointment)
         session.commit()
 
-    # get all appointments between certain dates
-    def get_appointments(
-        self,
+    @classmethod
+    def find_barber_by_email(
+        cls,
         session,
+        email,
+    ):
+        return session.execute(select(cls).filter_by(email=email)).scalars().first()
+
+
+class Client(Base):
+    __tablename__ = "clients"
+
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String)
+    last_name = Column(String)
+    email = Column(String)
+
+    appointments = Relationship("Appointment", back_populates="client")
+
+    # book an appointment
+    def book_appointment(self, session, appointment):
+        self.appointments.append(appointment)
+        session.commit()
+
+    @classmethod
+    def find_client_by_email(
+        cls,
+        session,
+        email,
+    ):
+        return session.execute(select(cls).filter_by(email=email)).scalars().first()
+
+    def __repr__(self):
+        return f"Client {self.first_name} {self.last_name}"
+
+
+class Appointment(Base):
+    __tablename__ = "appointments"
+
+    id = Column(Integer, primary_key=True)
+    barber_id = Column(Integer, ForeignKey("barbers.id"))
+    client_id = Column(Integer, ForeignKey("clients.id"))
+    date = Column(Date, nullable=False)
+    time = Column(Time, nullable=False)
+    booked = Column(Boolean, default=False)
+
+    barber = Relationship("Barber", back_populates="appointments")
+    client = Relationship("Client", back_populates="appointments")
+
+    # find an appointment
+    @classmethod
+    def find_appointments(
+        cls,
+        session,
+        barber_first_name=None,
+        barber_last_name=None,
         start_date=None,
         end_date=None,
         start_time=None,
         end_time=None,
         booked=None,
     ):
-        stm = select(Appointment).filter_by(barber_id=self.id)
+        stm = select(Appointment).join(Appointment.barber)
+
+        if barber_first_name:
+            stm = stm.filter(Barber.first_name == barber_first_name)
+
+        if barber_last_name:
+            stm = stm.filter(Barber.last_name == barber_last_name)
+
         if start_date:
             stm = stm.filter(Appointment.date >= start_date)
 
@@ -55,36 +114,8 @@ class Barber(Base):
 
         return appointments
 
-
-class Client(Base):
-    __tablename__ = "clients"
-
-    id = Column(Integer, primary_key=True)
-    first_name = Column(String)
-    last_name = Column(String)
-    email = Column(String)
-
-    appointments = Relationship("Appointment", back_populates="client")
-
-    def __repr__(self):
-        return f"Client {self.first_name} {self.last_name}"
-
-
-class Appointment(Base):
-    __tablename__ = "appointments"
-
-    id = Column(Integer, primary_key=True)
-    barber_id = Column(Integer, ForeignKey("barbers.id"))
-    client_id = Column(Integer, ForeignKey("clients.id"))
-    date = Column(Date, nullable=False)
-    time = Column(Time, nullable=False)
-    booked = Column(Boolean, default=False)
-
-    barber = Relationship("Barber", back_populates="appointments")
-    client = Relationship("Client", back_populates="appointments")
-
     def __repr__(self):
         return (
             f"Appointment {self.barber_id} with {self.client_id}"
-            + f"on {self.date} at {self.time}"
+            + f" on {self.date} at {self.time}"
         )
