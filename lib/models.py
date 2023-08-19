@@ -1,5 +1,5 @@
 from sqlalchemy.orm import declarative_base, Relationship
-from sqlalchemy import Column, Time, Date, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Time, Date, Integer, String, Boolean, ForeignKey, select
 
 
 Base = declarative_base()
@@ -18,12 +18,42 @@ class Barber(Base):
     def __repr__(self):
         return f"Barber {self.first_name} {self.last_name}"
 
-    # create an appointment,  day and time are python object
+    # create an appointment ,  day and time are python object
     def add_appointment(self, date, time, session):
         appointment = Appointment(date=date, time=time)
         appointment.barber = self
         session.add(appointment)
         session.commit()
+
+    # get all appointments between certain dates
+    def get_appointments(
+        self,
+        session,
+        start_date=None,
+        end_date=None,
+        start_time=None,
+        end_time=None,
+        booked=None,
+    ):
+        stm = select(Appointment).filter_by(barber_id=self.id)
+        if start_date:
+            stm = stm.filter(Appointment.date >= start_date)
+
+        if end_date:
+            stm = stm.filter(Appointment.date <= end_date)
+
+        if start_time:
+            stm = stm.filter(Appointment.time >= start_time)
+
+        if start_time:
+            stm = stm.filter(Appointment.time <= end_time)
+
+        if booked != None:
+            stm = stm.filter(Appointment.booked == booked)
+
+        appointments = session.execute(stm).scalars().all()
+
+        return appointments
 
 
 class Client(Base):
