@@ -2,9 +2,17 @@ from models import Barber, Client, Appointment
 from simple_term_menu import TerminalMenu
 from prettycli import red, blue, green
 import re
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+engine = create_engine("sqlite:///bookit.db")
+session = Session(engine)
 
 
 class Bookit:
+    def __init__(self):
+        self.user = None
+
     def start(self):
         print(green("\nWelcome to our barber shop\n"))
         print("Are you a barber or a client?\n")
@@ -17,14 +25,24 @@ class Bookit:
     def barber(self):
         print(green("\nPlease enter your email address. type exit to go back\n"))
         email = input()
-        exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
+
         if email == "exit":
             self.start()
+
+        exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
         if re.fullmatch(exp, email):
-            pass
+            self.handle_barber_login(email)
         else:
             print(red("email address is not valid\n"))
             self.barber()
+
+    def handle_barber_login(self, email):
+        barber = Barber.find_barber_by_email(session, email)
+        if not barber:
+            print(red("email address doesn't exist\n"))
+            self.barber()
+        self.user = barber
+        self.barber_page(barber)
 
 
 cli = Bookit()
