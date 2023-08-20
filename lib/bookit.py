@@ -47,6 +47,32 @@ class Bookit:
     def barber_page(self):
         print(green(f"\nWelcome {self.user.first_name}\n"))
         print("what would you like to do?")
+        options = ["See your appointments", "Add appointments", "See you Stats", "Exit"]
+        terminal_menu = TerminalMenu(options)
+        menu_index = terminal_menu.show()
+
+        if menu_index == 0:
+            self.see_appointments()
+
+        if menu_index == 1:
+            self.add_appointments()
+        if menu_index == 2:
+            self.see_stats(self)
+
+        if menu_index == 3:
+            self.exit()
+
+    def see_appointments(self):
+        pass
+
+    def add_appointments(self):
+        pass
+
+    def see_stats(self):
+        pass
+
+    def exit(self):
+        print("Bye")
 
 
 cli = Bookit()
