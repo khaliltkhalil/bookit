@@ -42,7 +42,11 @@ class Bookit:
             print(red("email address doesn't exist\n"))
             self.barber()
         self.user = barber
-        self.barber_page(barber)
+        self.barber_page()
+
+    def barber_page(self):
+        print(green(f"\nWelcome {self.user.first_name}\n"))
+        print("what would you like to do?")
 
 
 cli = Bookit()
