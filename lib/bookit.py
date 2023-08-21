@@ -82,7 +82,11 @@ class Bookit:
             end_date=end_date,
             booked=True,
         )
-        print(booked_appointments)
+        for appointment in booked_appointments:
+            print(
+                f"Appointment with {appointment.client} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
+            )
+        self.barber_page()
 
     def add_appointments(self):
         pass
