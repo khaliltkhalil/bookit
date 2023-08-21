@@ -75,8 +75,14 @@ class Bookit:
         edate = input()
         start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
         end_date = datetime.strptime(edate, "%Y-%m-%d").date()
-        print(start_date)
-        print(end_date)
+        booked_appointments = Appointment.find_appointments(
+            session,
+            barber_id=self.user.id,
+            start_date=start_date,
+            end_date=end_date,
+            booked=True,
+        )
+        print(booked_appointments)
 
     def add_appointments(self):
         pass

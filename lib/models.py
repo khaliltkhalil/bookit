@@ -47,6 +47,7 @@ class Client(Base):
     # book an appointment
     def book_appointment(self, session, appointment):
         self.appointments.append(appointment)
+        appointment.booked = True
         session.commit()
 
     @classmethod
