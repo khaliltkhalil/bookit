@@ -4,6 +4,7 @@ from prettycli import red, blue, green
 import re
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from datetime import datetime, date, time
 
 engine = create_engine("sqlite:///bookit.db")
 session = Session(engine)
@@ -47,7 +48,12 @@ class Bookit:
     def barber_page(self):
         print(green(f"\nWelcome {self.user.first_name}\n"))
         print("what would you like to do?")
-        options = ["See your appointments", "Add appointments", "See you Stats", "Exit"]
+        options = [
+            "See your booked appointments",
+            "Add appointments",
+            "See you Stats",
+            "Exit",
+        ]
         terminal_menu = TerminalMenu(options)
         menu_index = terminal_menu.show()
 
@@ -57,13 +63,20 @@ class Bookit:
         if menu_index == 1:
             self.add_appointments()
         if menu_index == 2:
-            self.see_stats(self)
+            self.see_stats()
 
         if menu_index == 3:
             self.exit()
 
     def see_appointments(self):
-        pass
+        print("\nEnter Start Date (format yyyy-mm-dd): (type exit to go back)\n")
+        sdate = input()
+        print("\nEnter End Date: (format yyyy-mm-dd) (type exit to go back)\n")
+        edate = input()
+        start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
+        end_date = datetime.strptime(edate, "%Y-%m-%d").date()
+        print(start_date)
+        print(end_date)
 
     def add_appointments(self):
         pass
@@ -72,7 +85,7 @@ class Bookit:
         pass
 
     def exit(self):
-        print("Bye")
+        print("\nBye\n")
 
 
 cli = Bookit()
