@@ -79,6 +79,7 @@ class Appointment(Base):
     def find_appointments(
         cls,
         session,
+        barber_id=None,
         barber_first_name=None,
         barber_last_name=None,
         start_date=None,
@@ -88,7 +89,8 @@ class Appointment(Base):
         booked=None,
     ):
         stm = select(Appointment).join(Appointment.barber)
-
+        if barber_id:
+            stm = stm.filter(Appointment.barber_id == barber_id)
         if barber_first_name:
             stm = stm.filter(Barber.first_name == barber_first_name)
 
