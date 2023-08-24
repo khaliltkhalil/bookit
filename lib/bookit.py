@@ -206,7 +206,9 @@ class Bookit:
 
         else:
             for appointment in appointments:
-                f"Appointment with {appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
+                print(
+                    f"Appointment with {appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
+                )
 
         self.client_page()
 
@@ -243,6 +245,7 @@ class Bookit:
             appointment = unbooked_appointments[menu_index - 1]
             self.user.book_appointment(session=session, appointment=appointment)
             print("\nappointment booked successfully\n")
+            self.client_page()
 
     def client_login(self):
         print(green("\nPlease enter your email address. type exit to go back\n"))
