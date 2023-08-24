@@ -139,6 +139,30 @@ class Bookit:
         terminal_menu = TerminalMenu(options)
         menu_entry_index = terminal_menu.show()
 
+    def new_client(self):
+        email = input("Please Enter yor email: (type exit to go back)")
+        if email == "exit":
+            self.client()
+            return
+        exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
+        if not re.fullmatch(exp, email):
+            print(red("email address is not valid\n"))
+            self.new_client()
+            return
+
+        first_name = input("Please Enter First Name: (type exit to go back)")
+        if first_name == "exit":
+            self.client()
+            return
+        last_name = input("Please Enter Last Name: ")
+        if last_name == "exit":
+            self.client()
+            return
+        self.handle_client_signup(first_name, last_name, email)
+
+    def handle_client_signup(self, first_name, last_name, email):
+        client = Client(first_name=first_name, last_name=last_name, email=email)
+
 
 cli = Bookit()
 cli.start()
