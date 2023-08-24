@@ -23,6 +23,8 @@ class Bookit:
         menu_entry_index = terminal_menu.show()
         if menu_entry_index == 0:
             self.barber()
+        if menu_entry_index == 1:
+            self.client()
         if menu_entry_index == 2:
             self.exit()
 
@@ -141,6 +143,10 @@ class Bookit:
         menu_entry_index = terminal_menu.show()
         if menu_entry_index == 0:
             self.new_client()
+        if menu_entry_index == 1:
+            self.client_login()
+        if menu_entry_index == 2:
+            self.exit()
 
     def new_client(self):
         email = input("Please Enter yor email: (type exit to go back)")
@@ -185,7 +191,7 @@ class Bookit:
             self.upcoming_appointments()
 
         if menu_index == 1:
-            self.book_appointments()
+            self.book_appointment()
 
         if menu_index == 2:
             self.exit()
@@ -237,6 +243,20 @@ class Bookit:
             appointment = unbooked_appointments[menu_index - 1]
             self.user.book_appointment(session=session, appointment=appointment)
             print("\nappointment booked successfully\n")
+
+    def client_login(self):
+        print(green("\nPlease enter your email address. type exit to go back\n"))
+        email = input()
+        if email == "exit":
+            self.client_page()
+            return
+        client = Client.find_barber_by_email(session, email)
+        if not client:
+            print(red("email address doesn't exist\n"))
+            self.client()
+        else:
+            self.user = client
+            self.client_page()
 
 
 cli = Bookit()
