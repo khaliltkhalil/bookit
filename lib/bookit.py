@@ -167,6 +167,26 @@ class Bookit:
         self.user = client
         self.client_page()
 
+    def client_page(self):
+        print(green(f"\nWelcome {self.user.first_name}\n"))
+        print("what would you like to do?")
+        options = [
+            "See your upcoming appointments",
+            "book an appointment",
+            "Exit",
+        ]
+        terminal_menu = TerminalMenu(options)
+        menu_index = terminal_menu.show()
+
+        if menu_index == 0:
+            self.upcoming_appointments()
+
+        elif menu_index == 1:
+            self.book_appointments()
+
+        elif menu_index == 2:
+            self.exit()
+
 
 cli = Bookit()
 cli.start()
