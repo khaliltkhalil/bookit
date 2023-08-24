@@ -76,8 +76,15 @@ class Bookit:
     def see_appointments(self):
         print("\nEnter Start Date (format yyyy-mm-dd): (type exit to go back)\n")
         sdate = input()
+        if sdate == "exit":
+            self.barber_page()
+            return
+
         print("\nEnter End Date: (format yyyy-mm-dd) (type exit to go back)\n")
         edate = input()
+        if edate == "exit":
+            self.barber_page()
+            return
         start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
         end_date = datetime.strptime(edate, "%Y-%m-%d").date()
         booked_appointments = Appointment.find_appointments(
