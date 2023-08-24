@@ -250,7 +250,7 @@ class Bookit:
         if email == "exit":
             self.client_page()
             return
-        client = Client.find_barber_by_email(session, email)
+        client = Client.find_client_by_email(session, email)
         if not client:
             print(red("email address doesn't exist\n"))
             self.client()
