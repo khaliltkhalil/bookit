@@ -162,6 +162,10 @@ class Bookit:
 
     def handle_client_signup(self, first_name, last_name, email):
         client = Client(first_name=first_name, last_name=last_name, email=email)
+        session.add(client)
+        session.commit()
+        self.user = client
+        self.client_page()
 
 
 cli = Bookit()
