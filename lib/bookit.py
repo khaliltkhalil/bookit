@@ -5,6 +5,7 @@ import re
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from datetime import datetime, date, time
+from prettytable import PrettyTable
 
 engine = create_engine("sqlite:///bookit.db")
 session = Session(engine)
@@ -106,7 +107,27 @@ class Bookit:
             self.barber_page()
 
     def see_stats(self):
-        pass
+        start_date = date(datetime.now().year, 1, 1)
+        end_date = datetime.now().date()
+        appointments = Appointment.find_appointments(
+            session=session,
+            barber_id=self.user.id,
+            start_date=start_date,
+            end_date=end_date,
+            booked=False,
+        )
+
+        count = {}
+        for appointment in appointments:
+            month = appointment.date.strftime("%b")
+            count[month] = count.get(month, 0) + 1
+        x = PrettyTable()
+        x.field_names = ["Month", "Number of Booked Appointments"]
+        for key, value in count.items():
+            x.add_row([key, value])
+        print(green("\nYour stats YTD:\n"))
+        print(x)
+        self.barber_page()
 
     def exit(self):
         print("\nBye\n")
