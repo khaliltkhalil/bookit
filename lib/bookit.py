@@ -109,6 +109,7 @@ class Bookit:
     def see_stats(self):
         start_date = date(datetime.now().year, 1, 1)
         end_date = datetime.now().date()
+        # get all appointments YTD
         appointments = Appointment.find_appointments(
             session=session,
             barber_id=self.user.id,
@@ -131,6 +132,12 @@ class Bookit:
 
     def exit(self):
         print("\nBye\n")
+
+    def client(self):
+        print("\n New or Existing client?\n")
+        options = ["New Client", "Returning Client", "Exit"]
+        terminal_menu = TerminalMenu(options)
+        menu_entry_index = terminal_menu.show()
 
 
 cli = Bookit()
