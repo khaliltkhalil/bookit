@@ -181,11 +181,25 @@ class Bookit:
         if menu_index == 0:
             self.upcoming_appointments()
 
-        elif menu_index == 1:
+        if menu_index == 1:
             self.book_appointments()
 
-        elif menu_index == 2:
+        if menu_index == 2:
             self.exit()
+
+    def upcoming_appointments(self):
+        start_date = datetime.now().date()
+        appointments = Appointment.find_appointments(
+            session=session, client_id=self.user.id, start_date=start_date
+        )
+        if not appointments:
+            print("\n you have no upcoming appointments\n")
+
+        else:
+            for appointment in appointments:
+                f"Appointment with {appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
+
+        self.client_page()
 
 
 cli = Bookit()
