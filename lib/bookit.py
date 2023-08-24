@@ -120,13 +120,26 @@ class Bookit:
         if date_string == "exit":
             self.barber_page()
             return
-        date = datetime.strptime(date_string, "%Y-%m-%d").date()
+        try:
+            date = datetime.strptime(date_string, "%Y-%m-%d").date()
+        except ValueError:
+            print("\ndate is not valid\n")
+            self.add_appointments()
+            return
+
         print("\nEnter appointment time: (format hh:00 AM/PM)\n")
         time_string = input()
         if time_string == "exit":
             self.barber_page()
             return
-        time = datetime.strptime(time_string, "%I:%M %p").time()
+
+        try:
+            time = datetime.strptime(time_string, "%I:%M %p").time()
+        except ValueError:
+            print("\ntime is not valid\n")
+            self.add_appointments()
+            return
+
         appointment = self.user.add_appointment(date, time, session)
         if appointment:
             print("\nAppointment added successfully\n")
