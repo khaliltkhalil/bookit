@@ -84,6 +84,7 @@ class Appointment(Base):
         barber_id=None,
         barber_first_name=None,
         barber_last_name=None,
+        client_id=None,
         start_date=None,
         end_date=None,
         start_time=None,
@@ -98,6 +99,8 @@ class Appointment(Base):
 
         if barber_last_name:
             stm = stm.filter(Barber.last_name == barber_last_name)
+        if client_id:
+            stm = stm.filter(Appointment.client_id == client_id)
 
         if start_date:
             stm = stm.filter(Appointment.date >= start_date)
