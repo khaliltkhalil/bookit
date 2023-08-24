@@ -31,7 +31,9 @@ class Bookit:
     def barber(self):
         print(green("\nPlease enter your email address. type exit to go back\n"))
         email = input()
-
+        if email == "exit":
+            self.start()
+            return
         exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
         if re.fullmatch(exp, email):
             self.handle_barber_login(email)
