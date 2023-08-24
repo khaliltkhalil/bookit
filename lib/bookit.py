@@ -79,14 +79,25 @@ class Bookit:
         if sdate == "exit":
             self.barber_page()
             return
+        try:
+            start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
+        except ValueError:
+            print("\ndate is not valid\n")
+            self.see_appointments()
+            return
 
         print("\nEnter End Date: (format yyyy-mm-dd) (type exit to go back)\n")
         edate = input()
         if edate == "exit":
             self.barber_page()
             return
-        start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
-        end_date = datetime.strptime(edate, "%Y-%m-%d").date()
+        try:
+            end_date = datetime.strptime(edate, "%Y-%m-%d").date()
+        except ValueError:
+            print("\ndate is not valid\n")
+            self.see_appointments()
+            return
+
         booked_appointments = Appointment.find_appointments(
             session,
             barber_id=self.user.id,
@@ -94,10 +105,13 @@ class Bookit:
             end_date=end_date,
             booked=True,
         )
-        for appointment in booked_appointments:
-            print(
-                f"Appointment with {appointment.client} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
-            )
+        if not booked_appointments:
+            print("\nNo booked appointments\n")
+        else:
+            for appointment in booked_appointments:
+                print(
+                    f"Appointment with {appointment.client} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
+                )
         self.barber_page()
 
     def add_appointments(self):
@@ -269,6 +283,12 @@ class Bookit:
         else:
             self.user = client
             self.client_page()
+
+    def is_valid(input, input_type):
+        input_types_exp = {
+            "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b",
+            "date": r"\b[0-9]{4}-[01]",
+        }
 
 
 cli = Bookit()
