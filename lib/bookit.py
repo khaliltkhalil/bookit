@@ -114,18 +114,36 @@ class Bookit:
                 )
         self.barber_page()
 
-    def add_appointments(self):
-        print("\nEnter appointment date: (format yyyy-mm-dd) (type exit to go back)\n")
+    def get_date(self, message):
+        print(f"\n{message}\n")
         date_string = input()
         if date_string == "exit":
-            self.barber_page()
-            return
+            return None
         try:
             date = datetime.strptime(date_string, "%Y-%m-%d").date()
+            return date
         except ValueError:
-            print("\ndate is not valid\n")
-            self.add_appointments()
+            print(red("\ndate is not valid\n"))
+            return self.get_date(message)
+
+    def add_appointments(self):
+        message = "Enter appointment date: (format yyyy-mm-dd) (type exit to go back)"
+        date = self.get_date(message)
+        if date == None:
+            self.barber_page()
             return
+
+        # print("\nEnter appointment date: (format yyyy-mm-dd) (type exit to go back)\n")
+        # date_string = input()
+        # if date_string == "exit":
+        #     self.barber_page()
+        #     return
+        # try:
+        #     date = datetime.strptime(date_string, "%Y-%m-%d").date()
+        # except ValueError:
+        #     print("\ndate is not valid\n")
+        #     self.add_appointments()
+        #     return
 
         print("\nEnter appointment time: (format hh:00 AM/PM)\n")
         time_string = input()
