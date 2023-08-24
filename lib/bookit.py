@@ -94,17 +94,18 @@ class Bookit:
         date_string = input()
         if date_string == "exit":
             self.barber_page()
-        else:
-            date = datetime.strptime(date_string, "%Y-%m-%d").date()
-            print("\nEnter appointment time: (format hh:00 AM/PM)\n")
-            time_string = input()
-            if time_string == "exit":
-                self.barber_page()
-            time = datetime.strptime(time_string, "%I:%M %p").time()
-            appointment = self.user.add_appointment(date, time, session)
-            if appointment:
-                print("\nAppointment added successfully\n")
-                self.barber_page()
+            return
+        date = datetime.strptime(date_string, "%Y-%m-%d").date()
+        print("\nEnter appointment time: (format hh:00 AM/PM)\n")
+        time_string = input()
+        if time_string == "exit":
+            self.barber_page()
+            return
+        time = datetime.strptime(time_string, "%I:%M %p").time()
+        appointment = self.user.add_appointment(date, time, session)
+        if appointment:
+            print("\nAppointment added successfully\n")
+            self.barber_page()
 
     def see_stats(self):
         start_date = date(datetime.now().year, 1, 1)
@@ -138,6 +139,8 @@ class Bookit:
         options = ["New Client", "Returning Client", "Exit"]
         terminal_menu = TerminalMenu(options)
         menu_entry_index = terminal_menu.show()
+        if menu_entry_index == 0:
+            self.new_client()
 
     def new_client(self):
         email = input("Please Enter yor email: (type exit to go back)")
@@ -200,6 +203,40 @@ class Bookit:
                 f"Appointment with {appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
 
         self.client_page()
+
+    def book_appointment(self):
+        print("\nEnter Start Date (format yyyy-mm-dd): (type exit to go back)\n")
+        sdate = input()
+        if sdate == "exit":
+            self.client_page()
+            return
+        print("\nEnter End Date: (format yyyy-mm-dd) (type exit to go back)\n")
+        edate = input()
+        if edate == "exit":
+            self.client_page()
+            return
+        start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
+        end_date = datetime.strptime(edate, "%Y-%m-%d").date()
+        unbooked_appointments = Appointment.find_appointments(
+            session,
+            start_date=start_date,
+            end_date=end_date,
+            booked=False,
+        )
+        if not unbooked_appointments:
+            print("\n no available appointments with these dates\n")
+            self.book_appointment()
+            return
+        options = ["Exit"] + list(map(str, unbooked_appointments))
+        print("\n please choose an appointment:\n")
+        terminal_menu = TerminalMenu(options)
+        menu_index = terminal_menu.show()
+        if menu_index == 0:
+            self.book_appointment()
+        else:
+            appointment = unbooked_appointments[menu_index - 1]
+            self.user.book_appointment(session=session, appointment=appointment)
+            print("\nappointment booked successfully\n")
 
 
 cli = Bookit()
