@@ -24,6 +24,7 @@ class Barber(Base):
         appointment.barber = self
         session.add(appointment)
         session.commit()
+        return appointment
 
     @classmethod
     def find_barber_by_email(

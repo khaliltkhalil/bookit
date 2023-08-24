@@ -89,7 +89,21 @@ class Bookit:
         self.barber_page()
 
     def add_appointments(self):
-        pass
+        print("\nEnter appointment date: (format yyyy-mm-dd) (type exit to go back)\n")
+        date_string = input()
+        if date_string == "exit":
+            self.barber_page()
+
+        date = datetime.strptime(date_string, "%Y-%m-%d").date()
+        print("\nEnter appointment time: (format hh:00 AM/PM)\n")
+        time_string = input()
+        if time_string == "exit":
+            self.barber_page()
+        time = datetime.strptime(time_string, "%I:%M %p").time()
+        appointment = self.user.add_appointment(date, time, session)
+        if appointment:
+            print("\nAppointment added successfully\n")
+            self.barber_page()
 
     def see_stats(self):
         pass
