@@ -249,29 +249,29 @@ class Bookit:
         self.client_page()
 
     def book_appointment(self):
-        print("\nEnter Start Date (format yyyy-mm-dd): (type exit to go back)\n")
-        sdate = input()
-        if sdate == "exit":
+        message = "Enter Start Date (format yyyy-mm-dd): (type exit to go back)"
+        sdate = self.get_date(message)
+        if sdate == None:
             self.client_page()
             return
-        print("\nEnter End Date: (format yyyy-mm-dd) (type exit to go back)\n")
-        edate = input()
-        if edate == "exit":
+
+        message = "Enter End Date: (format yyyy-mm-dd) (type exit to go back)"
+        edate = self.get_date(message)
+        if edate == None:
             self.client_page()
             return
-        start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
-        end_date = datetime.strptime(edate, "%Y-%m-%d").date()
+
         unbooked_appointments = Appointment.find_appointments(
             session,
-            start_date=start_date,
-            end_date=end_date,
+            start_date=sdate,
+            end_date=edate,
             booked=False,
         )
         if not unbooked_appointments:
             print("\n no available appointments with these dates\n")
             self.book_appointment()
             return
-        options = ["Exit"] + list(map(str, unbooked_appointments))
+        options = ["Exit"] + list(map(Bookit.print_appointment, unbooked_appointments))
         print("\n please choose an appointment:\n")
         terminal_menu = TerminalMenu(options)
         menu_index = terminal_menu.show()
@@ -282,6 +282,10 @@ class Bookit:
             self.user.book_appointment(session=session, appointment=appointment)
             print("\nappointment booked successfully\n")
             self.client_page()
+
+    @staticmethod
+    def print_appointment(appointment):
+        return f"{appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
 
     def client_login(self):
         print(green("\nPlease enter your email address. type exit to go back\n"))
