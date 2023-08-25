@@ -81,7 +81,7 @@ class Bookit:
             return
 
         message = "Enter End Date: (format yyyy-mm-dd) (type exit to go back)"
-        edate = self.get_time(message)
+        edate = self.get_date(message)
         if edate == None:
             self.barber_page()
             return
@@ -98,7 +98,7 @@ class Bookit:
         else:
             for appointment in booked_appointments:
                 print(
-                    f"Appointment with {appointment.client} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
+                    f"\nAppointment with {appointment.client} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
                 )
         self.barber_page()
 
@@ -124,7 +124,7 @@ class Bookit:
             time = datetime.strptime(time_string, "%I:%M %p").time()
             return time
         except ValueError:
-            print("\ntime is not valid\n")
+            print(red("\ntime is not valid\n"))
             return self.get_time(message)
 
     def add_appointments(self):
