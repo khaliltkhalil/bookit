@@ -185,7 +185,7 @@ class Bookit:
             self.exit()
 
     def new_client(self):
-        email = input("Please Enter yor email: (type exit to go back)")
+        email = input("Please Enter yor email: (type exit to go back): ")
         if email == "exit":
             self.client()
             return
@@ -195,7 +195,7 @@ class Bookit:
             self.new_client()
             return
 
-        first_name = input("Please Enter First Name: (type exit to go back)")
+        first_name = input("Please Enter First Name: (type exit to go back): ")
         if first_name == "exit":
             self.client()
             return
@@ -243,7 +243,7 @@ class Bookit:
         else:
             for appointment in appointments:
                 print(
-                    f"Appointment with {appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
+                    f"\nAppointment with {appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}\n"
                 )
 
         self.client_page()
@@ -295,7 +295,7 @@ class Bookit:
             return
         client = Client.find_client_by_email(session, email)
         if not client:
-            print(red("email address doesn't exist\n"))
+            print(red("\nemail address doesn't exist\n"))
             self.client()
         else:
             self.user = client
