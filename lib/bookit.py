@@ -74,35 +74,23 @@ class Bookit:
             self.exit()
 
     def see_appointments(self):
-        print("\nEnter Start Date (format yyyy-mm-dd): (type exit to go back)\n")
-        sdate = input()
-        if sdate == "exit":
+        message = "Enter Start Date (format yyyy-mm-dd): (type exit to go back)"
+        sdate = self.get_date(message)
+        if sdate == None:
             self.barber_page()
-            return
-        try:
-            start_date = datetime.strptime(sdate, "%Y-%m-%d").date()
-        except ValueError:
-            print("\ndate is not valid\n")
-            self.see_appointments()
             return
 
-        print("\nEnter End Date: (format yyyy-mm-dd) (type exit to go back)\n")
-        edate = input()
-        if edate == "exit":
+        message = "Enter End Date: (format yyyy-mm-dd) (type exit to go back)"
+        edate = self.get_time(message)
+        if edate == None:
             self.barber_page()
-            return
-        try:
-            end_date = datetime.strptime(edate, "%Y-%m-%d").date()
-        except ValueError:
-            print("\ndate is not valid\n")
-            self.see_appointments()
             return
 
         booked_appointments = Appointment.find_appointments(
             session,
             barber_id=self.user.id,
-            start_date=start_date,
-            end_date=end_date,
+            start_date=sdate,
+            end_date=edate,
             booked=True,
         )
         if not booked_appointments:
@@ -126,6 +114,19 @@ class Bookit:
             print(red("\ndate is not valid\n"))
             return self.get_date(message)
 
+    def get_time(self, message):
+        print(f"\n{message}\n")
+        time_string = input()
+        if time_string == "exit":
+            return None
+
+        try:
+            time = datetime.strptime(time_string, "%I:%M %p").time()
+            return time
+        except ValueError:
+            print("\ntime is not valid\n")
+            return self.get_time(message)
+
     def add_appointments(self):
         message = "Enter appointment date: (format yyyy-mm-dd) (type exit to go back)"
         date = self.get_date(message)
@@ -133,29 +134,10 @@ class Bookit:
             self.barber_page()
             return
 
-        # print("\nEnter appointment date: (format yyyy-mm-dd) (type exit to go back)\n")
-        # date_string = input()
-        # if date_string == "exit":
-        #     self.barber_page()
-        #     return
-        # try:
-        #     date = datetime.strptime(date_string, "%Y-%m-%d").date()
-        # except ValueError:
-        #     print("\ndate is not valid\n")
-        #     self.add_appointments()
-        #     return
-
-        print("\nEnter appointment time: (format hh:00 AM/PM)\n")
-        time_string = input()
-        if time_string == "exit":
+        message = "Enter appointment time: (format hh:00 AM/PM)"
+        time = self.get_time(message)
+        if time == None:
             self.barber_page()
-            return
-
-        try:
-            time = datetime.strptime(time_string, "%I:%M %p").time()
-        except ValueError:
-            print("\ntime is not valid\n")
-            self.add_appointments()
             return
 
         appointment = self.user.add_appointment(date, time, session)
