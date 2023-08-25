@@ -301,12 +301,6 @@ class Bookit:
             self.user = client
             self.client_page()
 
-    def is_valid(input, input_type):
-        input_types_exp = {
-            "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b",
-            "date": r"\b[0-9]{4}-[01]",
-        }
-
 
 cli = Bookit()
 cli.start()
