@@ -47,18 +47,34 @@ def populate_clients():
 
 def populate_appointments(barbers):
     year = 2023
-    month = 8
     appointments = []
-    for day in range(21, 27):
+    # booked appointments
+    for month in range(1, 9):
+        for day in range(1, 28):
+            for time in range(8, 19):
+                date = datetime.date(year, month, day)
+                time = datetime.time(time)
+                appointment = Appointment(date=date, time=time)
+                appointment.barber = random.choice(barbers)
+                appointment.client = random.choice(clients)
+                appointment.booked = True
+                appointments.append(appointment)
+    session.add_all(appointments)
+    session.commit()
+
+    appointments = []
+    # unbooked appointments
+    month = 9
+    for day in range(1, 30):
         for time in range(8, 19):
             date = datetime.date(year, month, day)
             time = datetime.time(time)
             appointment = Appointment(date=date, time=time)
             appointment.barber = random.choice(barbers)
             appointments.append(appointment)
+
     session.add_all(appointments)
     session.commit()
-    return appointments
 
 
 if __name__ == "__main__":
