@@ -57,7 +57,7 @@ As a client you can :
 1. See upcoming appointments
 2. Book an appointment
 
-![](https://github.com/khaliltkhalil/bookit/blob/main/Bookit_Demo.gif))
+![](https://github.com/khaliltkhalil/bookit/blob/main/Bookit_Demo.gif)
 
 ## Contributing
 
