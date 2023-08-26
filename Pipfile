@@ -4,6 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+alembic = "*"
+sqlalchemy = "*"
+faker = "*"
+ipdb = "*"
+simple-term-menu = "*"
+prettycli = "*"
+prettytable = "*"
 
 [dev-packages]
 
