@@ -29,17 +29,12 @@ class Bookit:
             self.exit()
 
     def barber(self):
-        print(green("\nPlease enter your email address. type exit to go back\n"))
-        email = input()
-        if email == "exit":
+        message = "Please enter your email address. type exit to go back"
+        email = self.get_email(message)
+        if email == None:
             self.start()
             return
-        exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
-        if re.fullmatch(exp, email):
-            self.handle_barber_login(email)
-        else:
-            print(red("email address is not valid\n"))
-            self.barber()
+        self.handle_barber_login(email)
 
     def handle_barber_login(self, email):
         barber = Barber.find_barber_by_email(session, email)
@@ -101,6 +96,19 @@ class Bookit:
                     f"\nAppointment with {appointment.client} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
                 )
         self.barber_page()
+
+    def get_email(self, message):
+        print(green(f"\n{message}\n"))
+        email = input()
+        if email == "exit":
+            return None
+
+        exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
+        if re.fullmatch(exp, email):
+            return email
+        else:
+            print(red("\nemail address is not valid\n"))
+            return self.get_email(message)
 
     def get_date(self, message):
         print(f"\n{message}\n")
@@ -185,21 +193,17 @@ class Bookit:
             self.exit()
 
     def new_client(self):
-        email = input("Please Enter yor email: (type exit to go back): ")
-        if email == "exit":
+        message = "Please Enter yor email: (type exit to go back)"
+        email = self.get_email(message)
+        if email == None:
             self.client()
             return
-        exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
-        if not re.fullmatch(exp, email):
-            print(red("email address is not valid\n"))
-            self.new_client()
-            return
 
-        first_name = input("Please Enter First Name: (type exit to go back): ")
+        first_name = input("\nPlease Enter First Name: (type exit to go back): ")
         if first_name == "exit":
             self.client()
             return
-        last_name = input("Please Enter Last Name: ")
+        last_name = input("\nPlease Enter Last Name: ")
         if last_name == "exit":
             self.client()
             return
@@ -288,9 +292,9 @@ class Bookit:
         return f"{appointment.barber} on {appointment.date} at {appointment.time.strftime('%I:%M %p')}"
 
     def client_login(self):
-        print(green("\nPlease enter your email address. type exit to go back\n"))
-        email = input()
-        if email == "exit":
+        message = "Please enter your email address. type exit to go back"
+        email = self.get_email(message)
+        if email == None:
             self.client_page()
             return
         client = Client.find_client_by_email(session, email)
