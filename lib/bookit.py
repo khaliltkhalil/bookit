@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from datetime import datetime, date, time
 from prettytable import PrettyTable
+from helper import get_email, get_date, get_time
 
 engine = create_engine("sqlite:///bookit.db")
 session = Session(engine)
@@ -30,7 +31,7 @@ class Bookit:
 
     def barber(self):
         message = "Please enter your email address. type exit to go back"
-        email = self.get_email(message)
+        email = get_email(message)
         if email == None:
             self.start()
             return
@@ -70,13 +71,13 @@ class Bookit:
 
     def see_appointments(self):
         message = "Enter Start Date (format yyyy-mm-dd): (type exit to go back)"
-        sdate = self.get_date(message)
+        sdate = get_date(message)
         if sdate == None:
             self.barber_page()
             return
 
         message = "Enter End Date: (format yyyy-mm-dd) (type exit to go back)"
-        edate = self.get_date(message)
+        edate = get_date(message)
         if edate == None:
             self.barber_page()
             return
@@ -97,53 +98,15 @@ class Bookit:
                 )
         self.barber_page()
 
-    def get_email(self, message):
-        print(green(f"\n{message}\n"))
-        email = input()
-        if email == "exit":
-            return None
-
-        exp = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
-        if re.fullmatch(exp, email):
-            return email
-        else:
-            print(red("\nemail address is not valid\n"))
-            return self.get_email(message)
-
-    def get_date(self, message):
-        print(f"\n{message}\n")
-        date_string = input()
-        if date_string == "exit":
-            return None
-        try:
-            date = datetime.strptime(date_string, "%Y-%m-%d").date()
-            return date
-        except ValueError:
-            print(red("\ndate is not valid\n"))
-            return self.get_date(message)
-
-    def get_time(self, message):
-        print(f"\n{message}\n")
-        time_string = input()
-        if time_string == "exit":
-            return None
-
-        try:
-            time = datetime.strptime(time_string, "%I:%M %p").time()
-            return time
-        except ValueError:
-            print(red("\ntime is not valid\n"))
-            return self.get_time(message)
-
     def add_appointments(self):
         message = "Enter appointment date: (format yyyy-mm-dd) (type exit to go back)"
-        date = self.get_date(message)
+        date = get_date(message)
         if date == None:
             self.barber_page()
             return
 
         message = "Enter appointment time: (format hh:00 AM/PM)"
-        time = self.get_time(message)
+        time = get_time(message)
         if time == None:
             self.barber_page()
             return
@@ -194,7 +157,7 @@ class Bookit:
 
     def new_client(self):
         message = "Please Enter yor email: (type exit to go back)"
-        email = self.get_email(message)
+        email = get_email(message)
         if email == None:
             self.client()
             return
@@ -254,13 +217,13 @@ class Bookit:
 
     def book_appointment(self):
         message = "Enter Start Date (format yyyy-mm-dd): (type exit to go back)"
-        sdate = self.get_date(message)
+        sdate = get_date(message)
         if sdate == None:
             self.client_page()
             return
 
         message = "Enter End Date: (format yyyy-mm-dd) (type exit to go back)"
-        edate = self.get_date(message)
+        edate = get_date(message)
         if edate == None:
             self.client_page()
             return
@@ -293,7 +256,7 @@ class Bookit:
 
     def client_login(self):
         message = "Please enter your email address. type exit to go back"
-        email = self.get_email(message)
+        email = get_email(message)
         if email == None:
             self.client_page()
             return
