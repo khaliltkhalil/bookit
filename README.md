@@ -6,6 +6,12 @@ A CLI application to manage online booking.
 
 Fork and clone the repository to your local machine.
 
+Move to the Repo folder :
+
+```bash
+cd bookit
+```
+
 Install dependencies :
 
 ```bash
